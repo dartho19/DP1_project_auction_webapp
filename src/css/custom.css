@@ -9,7 +9,13 @@
     border-top: 2px solid #4DB6AC !important;
 }
 
-/* Bootstrap Classes Rewrite*/
+
+/**********************************************************************************/
+/****************************+     Bootstrap Rewrite     +*************************/
+
+.container {
+    background-color: #FFF !important;
+}
 
 .btn {
     border-radius: 0px;
@@ -18,6 +24,7 @@
     padding: 6px 6px;
 }
 
+
 /**********************************************************************************/
 /****************************+     My Custom Classes     +*************************/
 
@@ -25,6 +32,7 @@
     background-image: url('../../img/header-bg-small.png');
     height: 250px;
     position: relative;
+    margin-bottom: 0px;
 }
 
 .my-title {
@@ -39,4 +47,11 @@
     bottom: 10px;
     margin-left: 30px;
     font-size: 135%;
+}
+
+.my-left-menu{
+    background-color: #fafafa;
+    padding-bottom: 15px;
+    border-right: 1px solid rgba(0,0,0,.14);
+    height: 300px;
 }

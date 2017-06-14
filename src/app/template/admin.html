@@ -1,11 +1,17 @@
+<!--template-->
 <h3>Benvenuto!</h3>
-<p>Questo è il pannello di amministrazione</p>
+<br>
+<label for="currentThr">La tua offerta massima corrente è </label>
+<span id="currentThr"></span>
+<br>
 <br>
 <form id="adminForm" action="/" method="POST">
     <div class="form-group">
-        <label for="thr">Imposta nuova offerta</label>
-        <input required id="thr" type="number" name="thr" class="form-control" placeholder="inserisci offerta">
+        <label for="thr">Imposta nuova offerta:</label>
+        <input required id="thr" type="number" name="thr" class="form-control" placeholder="inserisci offerta" min="0" step="0.01">
     </div>
+    <button id="logoutButton" class="btn btn-danger" onclick="logoutCallback()">Logout</button>
     <button id="sendThrButton" type="submit" class="btn btn-success">Invia!</button>
-    <button id="logoutButton" class="btn btn-success" onclick="logoutCallback()">Logout</button>
 </form>
+
+<script src="src/app/controller/admin.js"></script>

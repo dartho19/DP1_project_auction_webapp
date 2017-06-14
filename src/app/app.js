@@ -1,110 +1,110 @@
-/***********************************************
- *          Entry Point of the App
- * 
- ***********************************************/
-
-
-/************************
- * Functions
+/*******************************
+ * Utility Function Definition
  */
 
+//non permettere invio di dati dai form premendo "enter"
+function disableEnterKey() {
 
-/************************
- * Callbacks definition
- */
-
-//Callback chiamata al ritorno della promise della chiamata ajax del loginForm
-var loginCallback = function (responseText) {
-
-    console.log("[debug] response from php: " + responseText);
-
-    if (responseText == "UNACCEPTED_CREDENTIALS" || responseText == "DB_ERROR") {
-
-        showLoginFailed(); //mostra errore nel login e attendi nuovo tentativo
-
-    } else if (responseText == "LOGIN_OK") {
-
-        injectAdminTemplate(); //è stata aperta la sessione, apri le funzionalità
-
-    }
+    $(window).keydown(function (event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
 }
 
-//callback chiamata quando si verifica l'evento onclick sul button logout
-var logoutCallback = function () {
+//carica dal backend la thr corrente impostata dall'utente
+var getCurrentThr = function () {
 
     $.ajax({
-        url: 'src/php/auth.php',
+        url: 'src/php/bid.php',
         type: 'POST',
-        data: "action=logout", //serializzo dati a mano
+        data: "action=getCurrentThr", //serializzo dati a mano
         success: function (responseText) {
 
-            console.log(responseText);
+            console.log("[debug] THR dell'utente: " + responseText);
 
-            if (responseText == "LOGOUT_OK") {
+            if (!isNaN(responseText)) {
 
-                window.location.href = "index.html"; //effettua redirect a pagina di login
+                //è un numero
+                $("#currentThr").text(responseText + "€");
 
-            } else showLogoutFailed();
+            } else $("#currentThr").text("nessuna");
+        }
+    });
+}
+
+var getCurrentBid = function () {
+
+    $.ajax({
+        url: 'src/php/bid.php',
+        type: 'POST',
+        data: "action=getCurrentBid", //serializzo dati a mano
+        success: function (responseText) {
+
+            console.log("[debug] valore della migliore offerta attuale e miglior offerente: " + responseText);
+
+            var res = responseText.split("&"); //ricavo dati da stringa ritornata (bid&email)
+            var bid = res[0];
+            var email_best_bidder = res[1];
+
+            if (!isNaN(bid)) {
+
+                //esiste l'offerta, posso mostrare valore di bid
+                $("#currentBid").text(bid + "€");
+
+                //se esiste best bidder ne mostro il valore, se è l'utente connesso ad essere il best bidder glielo comunico
+                if (email_best_bidder == "NULL") {
+                    $("#emailBestBidder").text("nessun offerente");
+
+                } else {
+                    //esiste offerente, posso mostrare la sua mail
+                    $("#emailBestBidder").text(email_best_bidder);
+                }
+
+            } else {
+                $("#currentBid").text("nessuna offerta"); //offerta è ancora a NULL
+                $("#currentEmailBestBidder").text("nessun offerente");
+            }
         }
     });
 }
 
 
-/************************************************
- *          Here's starts the App execution
+/*******************************
+ * Template Injectors
+ */
+
+
+//AUCTION-TEMPLATE
+function injectAuctionTemplate() {
+
+    $("#main-content").load("src/app/template/auction.html"); //carica il template
+}
+
+//LOGIN-TEMPALTE
+function injectLoginTemplate() {
+    $("#left-menu").load("src/app/template/login.html"); //carica il template
+}
+
+//ADMIN-TEMPLATE
+function injectAdminTemplate() {
+
+    console.log("[debug] user logged in. preparing to show admin panel.");
+    $("#left-menu").load("src/app/template/admin.html"); //carica il template
+    getCurrentThr();
+}
+
+
+/***********************************************
+ *          Entry Point of the App
  * 
- ************************************************/
+ ***********************************************/
 $(document).ready(function () {
 
     loadAuction(); //carica il modello dal backend (l'asta)
     injectAuctionTemplate(); //lo inserisce nella view
     injectLoginTemplate(); //carica il template del login nel left-menu
-    disableEnterKey();
-
-
-    /**
-     * Registo event handlers solo dopo 0.5s per essere sicuro che il DOM sia caricato 
-     */
-    setTimeout(function () {
-
-            console.log("[debug] start to attach handlers to events.")
-
-            /**********
-             * Handler for "submit" event of the "loginForm"
-             * 
-             * send the form via AJAX 
-             */
-            $("#loginForm").submit(function (event) {
-
-                event.preventDefault(); // stops the default action="/"
-
-                //check if password is well formatted
-                if (!checkPassword($("#password").val())) {
-                    
-                    showInvalidPassword();
-
-                } else {
-                    
-                    var clickedButton = document.activeElement.id;
-                    var serializedForm = $('#loginForm').serialize() + "&action=" + clickedButton; //crea stringa formattata come url encoded (spedita nel body della POST)                
-
-                    console.log("[debug] sending the serialized data: " + serializedForm);
-
-                    $.ajax({
-                        url: 'src/php/auth.php',
-                        type: 'POST',
-                        data: serializedForm,
-                        success: loginCallback
-                    });
-                }
-            });
-
-
-            //end of handler registration
-            console.log("[debug] all handlers have been attached.")
-        },
-        500
-    );
-
-
+    disableEnterKey(); //return non invia il form
+    getCurrentBid(); //carica dal backend il valore impostato per bid
 })

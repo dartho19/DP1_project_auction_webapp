@@ -8,7 +8,9 @@ ini_set("display_errors", 1);
  ***********/
 //include 'session_manager.php'; //Fai partire la sessione / aggiornala
 include 'utilities/db_utilities.php';
-include 'utilities/session_utilities.php';
+
+ // including the session file
+include "session_manager.php";
 
 /*********************
  *      Constants
@@ -87,6 +89,7 @@ if( isset($_POST['action'])){
 //testo se email ed username risultano validi
 if( $userCredentials == UNACCEPTED_CREDENTIALS ){
 
+    destroySession();
     echo "UNACCEPTED_CREDENTIALS"; //ritorno al client questo valore
     exit; //blocco esecuzione script
 }
@@ -98,7 +101,9 @@ if( $userCredentials == UNACCEPTED_CREDENTIALS ){
  */
 if( db_connect() == DB_ERROR ){
     
+    destroySession();
     echo "DB_ERROR";
+    exit; 
 
 }else{
 
@@ -110,10 +115,14 @@ if( db_connect() == DB_ERROR ){
         if($loginResult == LOGIN_OK){
 
             //comunico avvenuto login ed AVVIO SESSIONE
-            startOrTestSession();
+            $_SESSION["email"] = $email; //salvo i dati sull'email dell'utente connesso
             echo "LOGIN_OK";
 
-        } else echo "UNACCEPTED_CREDENTIALS";
+        } else {
+            
+            destroySession();
+            echo "UNACCEPTED_CREDENTIALS";
+        } 
     
     } else if($action == "registerButton"){
 
@@ -123,10 +132,14 @@ if( db_connect() == DB_ERROR ){
         if($registrationResult == REGISTRATION_OK){
 
             //comunico avvenuta registraione ed AVVIO SESSIONE
-            startOrTestSession();
+            $_SESSION["email"] = $email; //salvo i dati sull'email dell'utente connesso
             echo "REGISTRATION_OK";
 
-        } else echo "UNACCEPTED_CREDENTIALS";
+        } else {
+            
+            destroySession();
+            echo "UNACCEPTED_CREDENTIALS";
+        } 
     }
 
 }

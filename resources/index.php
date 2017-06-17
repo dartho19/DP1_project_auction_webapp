@@ -1,3 +1,12 @@
+<?php
+    if( empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on'  ){
+        
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST:URI']);
+        exit();
+    }    
+?>
+
 <!doctype html>
 <html>
 
@@ -32,26 +41,9 @@
     <script src="src/app/app.js"></script>
 </head>
 
-<!-- Notifica se javascript non è abilitato -->
-<noscript>
-    <div>
-        <h3 style="padding-top: 20%;" align="center">You don't have JavaScript enabled. Please enable it in your browser settings to use the App.</h3>
-        <img style="margin: auto; width: 50%; display: block;" src="img/dinosaur.jpg" alt="there was a dinosaur">
-    </div>
-    <style type="text/css">
-        .my-header, .row {
-            display: none !important;
-        }
-
-        .container {
-            background-color: #f5f5f5 !important;
-        }
-    </style>
-</noscript>
-
 <!-- BODY -->
 
-<body id="container" class="container">
+<body class="container">
 
     <!-- header -->
     <div class="row page-header my-header">

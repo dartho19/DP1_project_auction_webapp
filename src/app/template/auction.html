@@ -3,15 +3,17 @@
 to be injected by controller in the main template if required.
 
  -->
-<h3>Auction</h3>
+<h3 class="my-auction-title">Stato dell'asta</h3>
 
-<label for="currentBid">Miglior offerta corrente:: </label>
-<span id="currentBid"></span>
-<br>
-<label for="emailBestBidder">Effettuata da: </label>
-<span id="emailBestBidder"></span>
+<div class="my-auction-info">
+    <label for="currentBid">Miglior offerta corrente: </label>
+    <h3 id="currentBid" class="my-bid-info"></h3>
 
-<br>
-<p>Usa il pannello a sinistra per impostare una nuova offerta!</p>
+    <br>
+
+    <label for="emailBestBidder">Effettuata da: </label>
+    <h3 id="emailBestBidder" class="my-bid-info"></h3>
+
+</div>
 
 <script src="src/app/controller/auction.js"></script>

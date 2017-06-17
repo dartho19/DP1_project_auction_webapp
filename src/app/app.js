@@ -17,55 +17,19 @@ function disableEnterKey() {
 var getCurrentThr = function () {
 
     $.ajax({
-        url: 'src/php/bid.php',
+        url: 'src/php/getData.php',
         type: 'POST',
         data: "action=getCurrentThr", //serializzo dati a mano
         success: function (responseText) {
 
             console.log("[debug] THR dell'utente: " + responseText);
 
-            if (!isNaN(responseText)) {
+            if (isNaN(responseText) || responseText == "") {
 
-                //è un numero
-                $("#currentThr").text(responseText + "€");
+                //non è un numero
+                $("#currentThr").text("nessuna");
 
-            } else $("#currentThr").text("nessuna");
-        }
-    });
-}
-
-var getCurrentBid = function () {
-
-    $.ajax({
-        url: 'src/php/bid.php',
-        type: 'POST',
-        data: "action=getCurrentBid", //serializzo dati a mano
-        success: function (responseText) {
-
-            console.log("[debug] valore della migliore offerta attuale e miglior offerente: " + responseText);
-
-            var res = responseText.split("&"); //ricavo dati da stringa ritornata (bid&email)
-            var bid = res[0];
-            var email_best_bidder = res[1];
-
-            if (!isNaN(bid)) {
-
-                //esiste l'offerta, posso mostrare valore di bid
-                $("#currentBid").text(bid + "€");
-
-                //se esiste best bidder ne mostro il valore, se è l'utente connesso ad essere il best bidder glielo comunico
-                if (email_best_bidder == "NULL") {
-                    $("#emailBestBidder").text("nessun offerente");
-
-                } else {
-                    //esiste offerente, posso mostrare la sua mail
-                    $("#emailBestBidder").text(email_best_bidder);
-                }
-
-            } else {
-                $("#currentBid").text("nessuna offerta"); //offerta è ancora a NULL
-                $("#currentEmailBestBidder").text("nessun offerente");
-            }
+            } else $("#currentThr").text(responseText + "€");
         }
     });
 }
@@ -102,9 +66,22 @@ function injectAdminTemplate() {
  ***********************************************/
 $(document).ready(function () {
 
-    loadAuction(); //carica il modello dal backend (l'asta)
+    //Check if cookies are enabled
+    if (!navigator.cookieEnabled) {
+        $("#container").load("src/app/template/nocookie.html"); //carica il template
+    }
+
+    //inject tempaltes and load data from backend
     injectAuctionTemplate(); //lo inserisce nella view
     injectLoginTemplate(); //carica il template del login nel left-menu
     disableEnterKey(); //return non invia il form
-    getCurrentBid(); //carica dal backend il valore impostato per bid
+
+    loadAuctionModel(); //carica il modello dal backend (l'asta)
+
+    //carica dal backend il valore impostato per bid ogni 3 secondi
+    setInterval(function () {
+        loadAuctionModel();
+
+    }, 3000);
+
 })

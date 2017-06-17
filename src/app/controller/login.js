@@ -12,13 +12,13 @@ function checkPassword(password) {
 
     var valid = true;
 
-    if( password.length < 2)
+    if (password.length < 2)
         valid = false;
 
     var r1 = new RegExp("[0-9]+", "i"); //matches a digit
     var r2 = new RegExp("[a-zA-Z]+", "i"); //matches a word
 
-    if( !r1.test(password) || !r2.test(password) )
+    if (!r1.test(password) || !r2.test(password))
         valid = false;
 
     return valid;
@@ -29,12 +29,12 @@ function checkPassword(password) {
  * Functions that shows alerts, popups and other messages
  */
 
-function showInvalidPassword(){
+function showInvalidPassword() {
     console.log("[debug] passoword not well formatted");
     alert("La password deve contenere almeno un carattere numerico ed uno alfabetico.");
 }
 
-function showLoginFailed(){
+function showLoginFailed() {
 
     console.log("[debug] login failed, showing alert to user");
     alert("Credenziali non valide.");
@@ -49,7 +49,7 @@ function showLoginFailed(){
 //Callback chiamata al ritorno della promise della chiamata ajax del loginForm
 var loginCallback = function (responseText) {
 
-    console.log("[debug] response from php: " + responseText);
+    console.log("[debug] Login attempt response: " + responseText);
 
     if (responseText == "UNACCEPTED_CREDENTIALS" || responseText == "DB_ERROR") {
 
@@ -57,8 +57,9 @@ var loginCallback = function (responseText) {
 
     } else if (responseText == "LOGIN_OK" || responseText == "REGISTRATION_OK") {
 
+        //mostra pannello amministrazione
         injectAdminTemplate(); //è stata aperta la sessione, apri le funzionalità
-
+       
     }
 }
 
@@ -94,6 +95,9 @@ $(document).ready(function () {
 
                     var clickedButton = document.activeElement.id;
                     var serializedForm = $('#loginForm').serialize() + "&action=" + clickedButton; //crea stringa formattata come url encoded (spedita nel body della POST)                
+
+                    //saving email into model
+                    user.email = $("#email").val();
 
                     console.log("[debug] sending the serialized data: " + serializedForm);
 

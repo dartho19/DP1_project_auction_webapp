@@ -6,11 +6,14 @@ ini_set("display_errors", 1);
 /************
  * Includes
  ***********/
+//verify if the script has been requested over https, if not do a self-redirect thour https
+include 'checkSSL.php';
+
 //include 'session_manager.php'; //Fai partire la sessione / aggiornala
 include 'utilities/db_utilities.php';
 
- // including the session file
-include "session_manager.php";
+// including the session functions
+include "utilities/session_utilities.php";
 
 /*********************
  *      Constants
@@ -29,46 +32,18 @@ $inputData = "VALID"; //per verificare se input valido o meno
 $thr;
 $email;
 
+/*********************
+* Inizializza sessione
+*/
+startOrUpdateSession();
+/*********************/
+
 /*************************************************
 *   Inizio esecuzione script
 */
 
-if( isset($_SESSION['email']) ) $email = $_SESSION['email']; //non è settata se richiesto bid senza che sia partita la sessione
-
 /**
- * 1) Verifica se è stato richiesto il valore corrente di THR
- */
-if( isset($_POST['action']) ){
-
-    $action = $_POST['action'];
-
-    if( $action == "getCurrentThr" ){
-        
-        db_connect();
-        echo db_get_current_thr($email);
-        db_close();
-        exit;
-    }
-}
-
-/**
- * 2) Verifica se è stato richiesto il valore corrente di BID
- */
-if( isset($_POST['action']) ){
-
-    $action = $_POST['action'];
-
-    if( $action == "getCurrentBid" ){
-        
-        db_connect();
-        echo db_get_current_bid();
-        db_close();
-        exit;
-    }
-}
-
-/**
- * 3) E' stato richiesto inserimento nuovo THR o altra action
+ * 3) E' stato richiesto inserimento nuovo THR o altra action da parte l'utente
  */
 
 //controllo se thr impostato, ed è un valore numerico decimale consentito
@@ -106,7 +81,7 @@ if( db_connect() == DB_ERROR ){
 
 }else{
 
-    if( $action == "placeNewThr"){
+    if( $action == "placeNewThr" ){
         
         //imposto nuova threshold per l'utente
         $email = $_SESSION['email'];
@@ -118,7 +93,7 @@ if( db_connect() == DB_ERROR ){
             echo "BEST_BIDDER";
 
         } else if($bidResult == THR_UPDATE_OK){
-            //thr aggiornata correttamente
+            //thr aggiornata correttamente, ma l'utente non è risultato essere il miglior offerente
             echo "THR_UPDATE_OK";
 
         } else if ($bidResult == THR_UPDATE_KO){

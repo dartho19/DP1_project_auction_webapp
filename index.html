@@ -11,12 +11,12 @@
     <meta name="author" content="giovanni.garifo@polito.it" />
     <meta http-equiv="pragma" content="no-cache" />
 
-    <!-- Immediatly redirect to https if user access via http-->
+    <!-- Immediatly redirect to https if user access via http
     <script type="text/javascript">
         if (window.location.protocol != 'https:') {
             location.href = location.href.replace("http://", "https://");
         }
-    </script>
+    </script>-->
 
     <!-- Imports all styles -->
     <link href="resources/bootstrap.min.css" rel="stylesheet">
@@ -25,10 +25,13 @@
     <!--Imports of JQuery from CDN-->
     <script src="resources/jquery-3.2.1.js"></script>
 
-    <!-- Imports all js scripts-->
+    <!-- Import of js scripts-->
     <!-- 1. carica modello -->
     <script src="src/app/model/auction.js"></script>
-    <!-- 2. carica app -->
+    <script src="src/app/model/user.js"></script>
+    <!-- 2. carica ctrl -->
+    <script src="src/app/controller/auction.js"></script>
+    <!-- 3. carica app -->
     <script src="src/app/app.js"></script>
 </head>
 

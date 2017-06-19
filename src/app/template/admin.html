@@ -4,7 +4,7 @@
 
 <div>
     <label for="currentThr">La tua offerta massima corrente è </label>
-    <span id="currentThr"></span>
+    <span id="currentThr" class="my-current-thr"></span>
 </div>
 
 <br>
@@ -15,7 +15,7 @@
         <input required id="thr" type="number" name="thr" class="form-control" placeholder="inserisci offerta" min="0" step="0.01">
     </div>
     <div>
-        <button id="logoutButton" class="btn btn-danger" onclick="logoutCallback()">Logout</button>
+        <button id="logoutButton" type="button" class="btn btn-danger" onclick="logoutCallback()">Logout</button>
         <button id="sendThrButton" type="submit" class="btn btn-success">Invia!</button>
     </div>
 </form>

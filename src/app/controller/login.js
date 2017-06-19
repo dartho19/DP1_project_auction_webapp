@@ -16,7 +16,7 @@ function checkPassword(password) {
         valid = false;
 
     var r1 = new RegExp("[0-9]+", "i"); //matches a digit
-    var r2 = new RegExp("[a-zA-Z]+", "i"); //matches a word
+    var r2 = new RegExp("[a-zA-Z]+", "i"); //matches an alphabetical char
 
     if (!r1.test(password) || !r2.test(password))
         valid = false;
@@ -112,7 +112,7 @@ $(document).ready(function () {
 
 
             //end of handler registration
-            console.log("[debug] login.js - all handlers have been attached.")
+            console.log("[debug] login.js ctrl - all handlers have been attached.")
         },
         500
     );

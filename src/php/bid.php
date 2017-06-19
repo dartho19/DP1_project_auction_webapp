@@ -1,4 +1,10 @@
 <?php
+/********************************************************************************************************
+ *           Gestisce la richiesta di aggiornamento della THR impostata da un utente loggato.
+ * 
+ * ******************************************************************************************************/
+
+
 //error reporting for DEBUG -> to be removed in production
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
@@ -7,7 +13,7 @@ ini_set("display_errors", 1);
  * Includes
  ***********/
 //verify if the script has been requested over https, if not do a self-redirect thour https
-include 'checkSSL.php';
+//include 'utilities/checkSSL.php';
 
 //include 'session_manager.php'; //Fai partire la sessione / aggiornala
 include 'utilities/db_utilities.php';
@@ -42,8 +48,14 @@ startOrUpdateSession();
 *   Inizio esecuzione script
 */
 
+//verifica se l'utente è loggato
+if( !isset($_SESSION['email']) ){
+    echo "THR_UPDATE_KO"; //ritorno al client questo valore
+    exit; //blocco esecuzione script
+}
+
 /**
- * 3) E' stato richiesto inserimento nuovo THR o altra action da parte l'utente
+ * E' stato richiesto inserimento nuovo THR o altra action da parte l'utente
  */
 
 //controllo se thr impostato, ed è un valore numerico decimale consentito

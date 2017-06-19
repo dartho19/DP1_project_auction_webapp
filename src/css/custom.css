@@ -74,6 +74,12 @@
     min-width: 292px;
 }
 
+.my-current-thr {
+    font-size: 24px; /*la stessa di h3 in bootstrap*/
+    text-align: center;
+    display: block;
+}
+
 .my-response {
     text-align: center;
     font-size: large;
@@ -82,11 +88,11 @@
 }
 
 .my-response-text-ok {
-    color: #5cb85c;
+    color: #5cb85c !important;
 }
 
 .my-response-text-ko {
-    color: #c9302c;
+    color: #c9302c !important;
 }
 
 .my-bid-info {

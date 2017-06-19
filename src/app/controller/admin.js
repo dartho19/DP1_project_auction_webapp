@@ -7,16 +7,13 @@
  * Functions
  */
 
-/**
- * Functions that shows alerts, popups and other messages
- */
-
+//mostra un alert quando il login fallisce
 function showLogoutFailed() {
     console.log("[debug] logout failed, showing alert to user");
     alert("Errore durante il logout");
 }
 
-
+//invia richiesta al backend per verificare se la sessione dell'utente è ancora attiva
 var checkInactivity = function () {
 
     $.ajax({
@@ -33,6 +30,32 @@ var checkInactivity = function () {
                 window.location.replace("index.html"); //effettua redirect a pagina di login
 
             }
+        }
+    });
+}
+
+//carica dal backend la thr corrente impostata dall'utente
+var getCurrentThr = function () {
+
+    $.ajax({
+        url: 'src/php/getData.php',
+        type: 'POST',
+        data: "action=getCurrentThr", //serializzo dati a mano
+        success: function (responseText) {
+
+            console.log("[debug] THR dell'utente: " + responseText);
+
+            if (responseText == "") {
+
+                //non è un numero
+                $("#currentThr").text("nessuna");
+
+            } else{
+
+                //ottenuto il valore numerico di thr
+                user.thr = responseText;
+                $("#currentThr").text(responseText + "€");
+            } 
         }
     });
 }
@@ -56,7 +79,7 @@ var placeBidCallback = function (responseText) {
         loadAuctionModel(); //aggiorna modello visualizzando la nuova bid dato che è cambiata
 
         $("#response").text("Sei il miglior offerente!");
-        $("#response").addClass("my-response-text-ok");
+        $("#response").addClass("my-response-text-ok").removeClass("my-response-text-ko");
 
     } else if (responseText == "THR_UPDATE_OK") {
         //nuova thr impostata correttamente, ma l'utente non è il miglior offerente
@@ -64,10 +87,10 @@ var placeBidCallback = function (responseText) {
         loadAuctionModel(); //aggiorna template visualizzando la nuova bid dato che potrebbe essere cambiata
 
         $("#response").text("Non sei il miglior offerente.");
-        $("#response").addClass("my-response-text-ko");
+        $("#response").addClass("my-response-text-ko").removeClass("my-response-text-ok");
 
     } else if (responseText == "THR_UPDATE_KO" || responseText == "UNACCEPTED_INPUT") {
-        alert("Impossibile impostare nuova offerta.\n\nNOTA: il valore impostato deve essere maggiore della massima offerta fin ora puntata");
+        alert("Impossibile impostare nuova offerta.\n\nIll valore impostato deve essere maggiore del valore dell'asta.");
     }
 }
 
@@ -99,6 +122,8 @@ var logoutCallback = function () {
  ************************************************/
 $(document).ready(function () {
 
+    //acquisisci soglia offerta corrente impostata dallo user che si è loggato, mostrala ed aggiungila al model
+    getCurrentThr();
 
     //verifica se l'utente che si è appena collegato è il best bidder, notificaglielo
     if (user.email == auction.emailBestBidder) {
@@ -120,6 +145,11 @@ $(document).ready(function () {
     $("#adminForm").submit(function (event) {
 
         event.preventDefault(); // stops the default action="/"
+
+        //evito di inviare richista se l'utente inserisce la stessa THR attualmente impostata (viene comunque verificato sul backend)
+        if( user.thr == $("#thr").val() ){
+            alert("Imposta un'offerta diversa da quella corrente!\n\nPuoi aumentarla o diminuirla.");
+        }
 
         var serializedForm = $('#adminForm').serialize() + "&action=placeNewThr"; //crea stringa formattata come url encoded (spedita nel body della POST)                
 

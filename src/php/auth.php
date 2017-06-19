@@ -1,4 +1,10 @@
 <?php
+/********************************************************************************************************
+ *              Gestisce l'autenticazione, il logout e la registrazione di un utente.
+ * 
+ * ******************************************************************************************************/
+
+
 //error reporting for DEBUG -> to be removed in production
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
@@ -7,11 +13,10 @@ ini_set("display_errors", 1);
  * Includes
  ***********/
 //verify if the script has been requested over https, if not do a self-redirect thour https
-include 'checkSSL.php';
+//include 'utilities/checkSSL.php';
 
 //include the database utilities functions
 include 'utilities/db_utilities.php';
-
 // including the session functions
 include "utilities/session_utilities.php";
 
@@ -52,7 +57,7 @@ if( isset($_POST['action']) ){
 
     if( $action == "logout" ){
         
-        destroySession();
+        destroySession("exit");
         exit;
     }
 }
@@ -97,7 +102,7 @@ if( isset($_POST['action'])){
 //testo se email ed username risultano validi
 if( $userCredentials == UNACCEPTED_CREDENTIALS ){
 
-    destroySession(); //distruggi sessione
+    destroySession("noexit"); //distruggi sessione senza che destroySession effettui exit()
     echo "UNACCEPTED_CREDENTIALS"; //ritorno al client questo valore
     exit; //blocco esecuzione script
 }
@@ -109,7 +114,7 @@ if( $userCredentials == UNACCEPTED_CREDENTIALS ){
  */
 if( db_connect() == DB_ERROR ){
     
-    destroySession(); //distruggi sessione
+    destroySession("noexit"); //distruggi sessione
     echo "DB_ERROR";
     exit; 
 
@@ -128,7 +133,7 @@ if( db_connect() == DB_ERROR ){
 
         } else {
             
-            destroySession(); //distruggi sessione
+            destroySession("noexit"); //distruggi sessione
             echo "UNACCEPTED_CREDENTIALS";
         } 
     
@@ -145,7 +150,7 @@ if( db_connect() == DB_ERROR ){
 
         } else {
             
-            destroySession(); //distruggi sessione
+            destroySession("noexit"); //distruggi sessione
             echo "UNACCEPTED_CREDENTIALS";
         } 
     }

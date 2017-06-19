@@ -13,27 +13,6 @@ function disableEnterKey() {
     });
 }
 
-//carica dal backend la thr corrente impostata dall'utente
-var getCurrentThr = function () {
-
-    $.ajax({
-        url: 'src/php/getData.php',
-        type: 'POST',
-        data: "action=getCurrentThr", //serializzo dati a mano
-        success: function (responseText) {
-
-            console.log("[debug] THR dell'utente: " + responseText);
-
-            if (isNaN(responseText) || responseText == "") {
-
-                //non è un numero
-                $("#currentThr").text("nessuna");
-
-            } else $("#currentThr").text(responseText + "€");
-        }
-    });
-}
-
 
 /*******************************
  * Template Injectors
@@ -56,7 +35,6 @@ function injectAdminTemplate() {
 
     console.log("[debug] user logged in. preparing to show admin panel.");
     $("#left-menu").load("src/app/template/admin.html"); //carica il template
-    getCurrentThr();
 }
 
 

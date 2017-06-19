@@ -1,7 +1,8 @@
 <?php
-/**
-* script per gestire la Sessione Utente
-*/
+/********************************************************************************************************
+ *                   Libreria che contiene funzioni per gestire la Sessione.
+ * 
+ * ******************************************************************************************************/
 
 /****************
  *   Constants
@@ -13,8 +14,10 @@ DEFINE('MAX_INACTIVITY_TIME','120'); //tempo massimo di inattività consentito i
  *      Funzioni
  ***********************/
 
-//distrugge forzatamente la sessione lato server e lato client (cookie)
-function destroySession(){
+/*
+* Distrugge forzatamente la sessione lato server e lato client (cookie)
+*/
+function destroySession($action){
 
         $_SESSION=array(); //pulisco array 
     
@@ -28,14 +31,19 @@ function destroySession(){
         //distruggi la sessione
         session_destroy();      
 
+        if($action == "exit"){ //exit action
+            
+            // redirect client to login/default page
+            echo "SESSION_ENDED";
+            exit; // IMPORTANT to avoid further output from the script  
         
-        // redirect client to login/default page
-        echo "SESSION_ENDED";
-        exit; // IMPORTANT to avoid further output from the script  
+        } else return; //default action
 }
 
 
-//testa se la sessione è scaduta
+/*
+* Testa se la sessione è scaduta
+*/
 function testSession(){
 
     session_start(); //creates a session or resumes the current one (using the id in the http request) 
@@ -49,7 +57,7 @@ function testSession(){
 
         //la sessione deve scadere. è passato troppo tempo dall'ultima azione dell'utente
         if($delta > MAX_INACTIVITY_TIME){
-            destroySession();
+            destroySession("exit");
         } else {
             echo "SESSION_ALIVE";
         }
@@ -58,7 +66,9 @@ function testSession(){
 
 }
 
-//inizializza la sessione, se è già presente, aggiorna il timestamp dell'ultima modifica
+/*
+* Inizializza la sessione, se è già presente, aggiorna il timestamp dell'ultima modifica
+*/
 function startOrUpdateSession(){
 
     session_start(); //creates a session or resumes the current one (using the id in the http request) 

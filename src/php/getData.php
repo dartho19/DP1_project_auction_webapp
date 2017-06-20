@@ -12,7 +12,7 @@ ini_set("display_errors", 1);
  * Includes
  ***********/
 //verify if the script has been requested over https, if not do a self-redirect thour https
-//include 'utilities/checkSSL.php';
+include 'utilities/checkSSL.php';
 
 //include 'session_manager.php'; //Fai partire la sessione / aggiornala
 include 'utilities/db_utilities.php';

@@ -13,7 +13,7 @@ ini_set("display_errors", 1);
  * Includes
  ***********/
 //verify if the script has been requested over https, if not do a self-redirect thour https
-//include 'utilities/checkSSL.php';
+include 'utilities/checkSSL.php';
 
 //include the database utilities functions
 include 'utilities/db_utilities.php';
@@ -77,7 +77,7 @@ if( isset($_POST['email']) ){
 
         $domain = $domain[1];
     
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL) || !checkdnsrr($domain, 'MX') ){
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL) /*|| !checkdnsrr($domain, 'MX')*/ ){
              $userCredentials = UNACCEPTED_CREDENTIALS;
         }
 

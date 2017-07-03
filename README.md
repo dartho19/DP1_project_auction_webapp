@@ -11,9 +11,9 @@ Some screenshots:
 
 default page:
 
-![Alt text](DP1_project_auction_webapp/blob/master/screenshots/screen1.png?raw=true "Optional Title")
+![Alt text](screenshots/screen1.png?raw=true "Optional Title")
 
 
 admin panel after login:
-![Alt text](DP1_project_auction_webapp/blob/master/screenshots/screen2.png?raw=true "Optional Title")
+![Alt text](screenshots/screen2.png?raw=true "Optional Title")
 

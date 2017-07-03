@@ -27,7 +27,7 @@ var checkInactivity = function () {
             if (responseText == "SESSION_ENDED") {
 
                 alert("Sei rimasto inattivo per troppo tempo.\n\nEffettua nuovamente il Login.")
-                window.location.replace("index.html"); //effettua redirect a pagina di login
+                window.location.replace("index.php"); //effettua redirect a pagina di login
 
             }
         }
@@ -70,7 +70,7 @@ var placeBidCallback = function (responseText) {
 
     if( responseText == "SESSION_ENDED"){
         //redirect to homepage
-        window.location.replace("index.html");
+        window.location.replace("index.php");
     }
 
     if (responseText == "BEST_BIDDER") {
@@ -108,7 +108,7 @@ var logoutCallback = function () {
 
             if (responseText == "SESSION_ENDED") {
 
-                window.location.replace("index.html"); //effettua redirect a pagina di login
+                window.location.replace("index.php"); //effettua redirect a pagina di login
 
             } else showLogoutFailed();
         }
